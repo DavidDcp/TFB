@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: devops_db
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myuser -d mydatabase"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  web:
+    build: .
+    container_name: devops_web
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      # Asegura que la app apunte al contenedor 'db' (ignora host local)
+      DATABASE_URI: postgresql://myuser:mypassword@db:5432/mydatabase
+      FLASK_ENV: ${FLASK_ENV:-development}
+      PORT: ${PORT:-5000}
+    ports:
+      - "5000:5000"
+    volumes:
+      # Hot reload en desarrollo (si cambias el código local, se ve en el contenedor)
+      - ./:/app
+
+volumes:
+  db_data:
