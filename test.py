@@ -4,11 +4,10 @@ from app import create_app, db
 @pytest.fixture
 def client():
     # Configura la app en modo testing
-    app = create_app("test")
+    app = create_app("development")
     app.config.update({
         "TESTING": True,
         "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
-        "SQLALCHEMY_TRACK_MODIFICATIONS": False
     })
 
     # Crea la BD, levanta el test client y destruye al acabar
