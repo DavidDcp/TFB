@@ -1,10 +1,24 @@
-from app import db
+import os
 
-class Data(db.Model):
-    __tablename__ = "data"
+class Config:
+    SECRET_KEY = os.environ.get("SECRET_KEY", "your_secret_key")
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URI")
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+class DevelopmentConfig(Config):
+    DEBUG = True
 
-    def __repr__(self):
-        return f"<Data id={self.id} name={self.name}>"
+class ProductionConfig(Config):
+    DEBUG = False
+
+class TestingConfig:
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"  # Base de datos en memoria para tests
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+
+config_dict = {
+    "development": DevelopmentConfig,
+    "production": ProductionConfig,
+    "testing": TestingConfig
+}
