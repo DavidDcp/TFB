@@ -40,6 +40,3 @@ Contruir imagen y levantar servicio
 docker compose build
 docker compose up
 
-
-
-docker compose up
