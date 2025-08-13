@@ -37,6 +37,6 @@ pytest -v
 CON DOCKER:
 
 Contruir imagen y levantar servicio
-docker compose build
-docker compose up
+1. docker compose build
+2. docker compose up
 
