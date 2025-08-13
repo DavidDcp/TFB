@@ -4,18 +4,18 @@ from app.config import config_dict
 
 db = SQLAlchemy()
 
-
-def create_app(config_name):
+def create_app(config_name="development"):
     app = Flask(__name__)
     app.config.from_object(config_dict[config_name])
 
-    # Initialize the database
+    # Inicializar la base de datos
     db.init_app(app)
 
-    # Import blueprints/routes
+    # Importar blueprints/routes
     from app.routes import data_routes
 
-    # Register blueprints
+    # Registrar blueprints
     app.register_blueprint(data_routes)
 
     return app
+
